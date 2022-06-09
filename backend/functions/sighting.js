@@ -17,6 +17,7 @@ export const main = handler(async (event) => {
             sightedId: 1,
             thumbsUp: 4,
             thumbsDown: 1,
+            createdAt: "2022-06-09",// date.now,
         },
     };
 

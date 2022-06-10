@@ -39,7 +39,17 @@ function SightingMap() {
           lng: -119.944330
         },
         username: "username2",
-    }
+    },
+    {
+      title: "Title3",
+      description: "Description goes here.",
+      image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
+      location: {
+        lat: 39.252993, 
+        lng: -119.951344
+      },
+      username: "username3",
+  }
 ]
 
   return (
@@ -48,6 +58,7 @@ function SightingMap() {
         mapContainerStyle={mapStyle}
         zoom={15}
         center={mapCenter}
+        mapTypeId='satellite'
       >
         {
           sightings.map(item => {

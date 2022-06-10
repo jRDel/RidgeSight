@@ -32,6 +32,7 @@ useEffect(() => {
         mapContainerStyle={mapStyle}
         zoom={15}
         center={mapCenter}
+        mapTypeId='satellite'
       >
 
         {

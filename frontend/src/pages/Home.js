@@ -8,7 +8,16 @@ import SightingMap from "../components/SightingMap";
 import "./Home.css";
 
 export default function Home(){
-    return <>
-        <SightingMap />
-    </>
+    return (
+        <div className="row">
+            <div className="col-4">
+                
+            </div>
+            <div className="col-8">
+                <div className="map">
+                    <SightingMap />
+                </div>
+            </div>
+        </div>
+    )
 }

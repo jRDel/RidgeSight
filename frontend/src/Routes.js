@@ -9,6 +9,7 @@ import NewSighting from "./pages/NewSighting";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
+
 export default function Links() {
   return (
     <Routes>

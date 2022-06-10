@@ -7,9 +7,11 @@ function CreateSightingMap() {
     lng: -119.9527});
   
     const mapStyle = {        
-      height: "40rem",
-      width: "40rem"
+      height: "24rem",
+      width: "24rem"
     }
+
+    const Loading = <div>Loading. Refresh if it takes too long!</div>
   
   const mapCenter = {
     lat: 39.2497, 
@@ -27,7 +29,7 @@ useEffect(() => {
 }, [currentPosition])
 
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}>
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY} preventGoogleFontsLoading loadingElement={Loading}>
       <GoogleMap
         mapContainerStyle={mapStyle}
         zoom={15}

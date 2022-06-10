@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ProfileCard from '../components/ProfileCard';
+import EditProfileCard from '../components/EditProfileCard';
 import SightingMap from '../components/SightingMap';
 import "./Profile.css";
 
 function Profile() {
+    const [editMode, setEditMode] = useState(false);
 
     const user = {
         username: "Name",
@@ -15,21 +18,15 @@ function Profile() {
         <div className="container">
             <div className="row mt-5">
                 <div className="col-4">
-                    <div className="card mt-2">
-                        <img src="https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg" className="card-img-top profile-pic my-4" alt="profile-picture" />
-                        <div class="card-header">{user.username}</div>
-                        <div className="card-body">
-                            <p className="card-text">{user.description}</p>
-                        </div>
-                        <div class="card-header">Awards</div>
-                        <ul className="list-group list-group-flush">
-                            {
-                                user.awards.map((award) => {
-                                    return <li className="list-group-item">{award}</li>
-                                })
-                            }
-                        </ul>
-                    </div>
+                    {editMode && 
+                        <EditProfileCard { ...user } />
+                    }
+
+                    {!editMode &&
+                        <ProfileCard { ...user } />
+                    }
+                
+                    <button className="mt-3 btn btn-primary" onClick={() => setEditMode(!editMode)}>Edit</button>
                 </div>
 
                 <div className="col-8">

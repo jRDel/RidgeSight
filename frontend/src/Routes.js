@@ -37,6 +37,14 @@ export default function Links() {
             </AuthenticatedRoute>
         }
       />
+      <Route
+        path="/profile"
+        element={
+            <AuthenticatedRoute>
+            <Profile />
+            </AuthenticatedRoute>
+        }
+      />
 
       <Route path="*" element={<NotFound />} />;
     </Routes>

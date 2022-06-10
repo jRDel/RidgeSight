@@ -1,0 +1,35 @@
+.Login {
+    padding: 10vw;
+    max-height: 100vh
+}
+
+.Login form {
+    margin: auto;
+    max-width: 300px;
+}
+
+.description {
+  margin: 100px 0px 0px 0px;
+  max-width: 65%;
+}
+
+.how {
+  margin-top: 40px;
+}
+
+.why{
+    margin-top: 40px;
+}
+
+.bottomtext{
+  bottom: 0;
+  position: absolute;
+  color: rgb(183, 183, 183);
+  text-align: center;
+  margin-left: 25%;
+}
+
+.logo{
+  display: flex;
+  justify-content: center;
+}

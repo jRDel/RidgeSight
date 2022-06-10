@@ -8,7 +8,7 @@ export const main = handler(async (event) => {
         TableName: process.env.TABLE_NAME,
         Item: {
             // The attributes of the item to be created
-            name: "Worst Fit",
+            award: "Worst Fit",
         },
     };
 

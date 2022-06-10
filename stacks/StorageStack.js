@@ -12,12 +12,16 @@ export function StorageStack({ stack, app }) {
       },
     ],
   });
-  const table = new Table(stack, "Notes", {
+  const table = new Table(stack, "RidgeSight", {
     fields: {
-      userId: "string",
-      noteId: "string",
+      pk: "string",
+      sk: "string",
+      id: "string",
     },
-    primaryIndex: { partitionKey: "userId", sortKey: "noteId" },
+    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
+    localIndexes: {
+      pkIdIndex: { sortKey: "id" },
+    },
   });
 
   return {

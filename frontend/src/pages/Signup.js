@@ -10,6 +10,8 @@ import "./Signup.css";
 
 export default function Signup() {
   const [fields, handleFieldChange] = useFormFields({
+    given_name: "",
+    family_name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -22,6 +24,8 @@ export default function Signup() {
 
   function validateForm() {
     return (
+      fields.given_name.length > 0 &&
+      fields.family_name.length > 0 &&
       fields.email.length > 0 &&
       fields.password.length > 0 &&
       fields.password === fields.confirmPassword &&
@@ -40,6 +44,10 @@ export default function Signup() {
       const newUser = await Auth.signUp({
         username: fields.email,
         password: fields.password,
+        attributes: {
+          given_name: fields.given_name,
+          family_name: fields.family_name,
+        }
       });
       setIsLoading(false);
       setNewUser(newUser);
@@ -93,6 +101,22 @@ export default function Signup() {
   function renderForm() {
     return (
       <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="given_name" size="lg">
+          <Form.Label>First Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={fields.given_name}
+            onChange={handleFieldChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="family_name" size="lg">
+          <Form.Label>Last Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={fields.family_name}
+            onChange={handleFieldChange}
+          />
+        </Form.Group>
         <Form.Group controlId="email" size="lg">
           <Form.Label>Email</Form.Label>
           <Form.Control

@@ -85,7 +85,7 @@ function SightingMap() {
                 <div>
                     <h5>{selected.title}</h5>
                     <p>{selected.description}</p>
-                    <img src={selected.image} width="100px" height="100px"></img>
+                    <img src={selected.image} width="100px" height="100px" alt={selected.sightee}></img>
                     <div className="mt-3">
                         Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightee}</a>
                     </div>
@@ -112,7 +112,9 @@ function SightingMap() {
 
                     { upvoted && 
                       <div>
-                        <button className="upvoted"><FontAwesomeIcon icon={faThumbsUp} /></button>
+                        <button className="upvoted" onClick={() => setUpvoted(false)}>
+                          <FontAwesomeIcon icon={faThumbsUp} />
+                        </button>
                         <button className="vote-button" onClick={() => {
                             setDownvoted(true);
                             setUpvoted(false);
@@ -132,7 +134,7 @@ function SightingMap() {
                           }}>
                             <FontAwesomeIcon icon={faThumbsUp} />
                         </button>
-                        <button className="downvoted"><FontAwesomeIcon className="mx-3" icon={faThumbsDown} /></button>
+                        <button className="downvoted" onClick={() => setDownvoted(false)}><FontAwesomeIcon className="mx-3" icon={faThumbsDown} /></button>
                       </div>
                     }
                 </div>

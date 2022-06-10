@@ -19,14 +19,19 @@ function Profile() {
             <div className="row mt-5">
                 <div className="col-4">
                     {editMode && 
-                        <EditProfileCard { ...user } />
+                        <div>
+                            <EditProfileCard { ...user } />
+                            <button className="mt-3 btn btn-primary" onClick={() => setEditMode(false)}>Cancel</button>
+                        </div>
                     }
 
                     {!editMode &&
-                        <ProfileCard { ...user } />
+                        <div>
+                            <ProfileCard { ...user } />
+                            <button className="mt-3 btn btn-primary" onClick={() => setEditMode(true)}>Edit</button>
+                        </div>
                     }
                 
-                    <button className="mt-3 btn btn-primary" onClick={() => setEditMode(!editMode)}>Edit</button>
                 </div>
 
                 <div className="col-8">

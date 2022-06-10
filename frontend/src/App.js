@@ -3,8 +3,9 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from 'react-bootstrap/Container';
 import Routes from "./Routes";
 import Nav from "react-bootstrap/Nav";
+import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
-import { AppContext } from "./lib/contextLib";
+import { AppContext, ThemeContext, themes } from "./lib/contextLib";
 import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
@@ -13,6 +14,7 @@ function App() {
   const nav = useNavigate();
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
     onLoad();
@@ -79,6 +81,21 @@ function App() {
         <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
           <Routes />
         </AppContext.Provider>
+        <ThemeContext.Consumer>
+        {({ changeTheme }) => (
+              <div className="modebutton">
+                <Button
+                onClick={() => {
+                  setDarkMode(!darkMode);
+                  changeTheme(darkMode ? themes.light : themes.dark);
+                }}
+                variant = {darkMode ? "light" : "dark"}
+              >
+                {darkMode ? <span>Light Mode</span> : <span>Dark Mode</span>}
+              </Button>
+              </div>
+            )}
+        </ThemeContext.Consumer>
       </div>
     )
   );

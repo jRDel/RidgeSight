@@ -1,1 +1,14 @@
-.App {}
+.App {
+    background: black;
+}
+.white-content {
+    background: #808080;
+  }
+.dark-content {
+    background: rgb(57, 52, 52);
+}
+.modebutton{
+    display: flex;
+    justify-content: end;
+    bottom: 0;
+}

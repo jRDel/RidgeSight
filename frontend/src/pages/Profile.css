@@ -3,3 +3,7 @@
     width: 20rem;
     margin: auto;
 }
+
+.edit-btn {
+    background-color: blue;
+}

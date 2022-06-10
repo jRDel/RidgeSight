@@ -1,0 +1,19 @@
+.vote-button {
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.upvoted {
+    padding: 0;
+    border: none;
+    background: none;
+    color: green;
+}
+
+.downvoted {
+    padding: 0;
+    border: none;
+    background: none;
+    color: red;
+}

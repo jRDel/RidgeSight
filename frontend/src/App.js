@@ -1,24 +1,86 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Container from 'react-bootstrap/Container';
+import Routes from "./Routes";
+import Nav from "react-bootstrap/Nav";
+import { LinkContainer } from "react-router-bootstrap";
+import { AppContext } from "./lib/contextLib";
+import { Auth } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
+import "./App.css";
 
 function App() {
+  const nav = useNavigate();
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+
+  useEffect(() => {
+    onLoad();
+  }, []);
+  
+  async function onLoad() {
+    try {
+      await Auth.currentSession();
+      userHasAuthenticated(true);
+    } catch (e) {
+      if (e !== "No current user") {
+        alert(e);
+      }
+    }
+  
+    setIsAuthenticating(false);
+  }
+
+  async function handleLogout() {
+    await Auth.signOut();
+  
+    userHasAuthenticated(false);
+    nav("/login");
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    !isAuthenticating && (
+      <div className="">
+        <Navbar collapseOnSelect bg="dark" expand="lg" variant="dark" className="mb-3">
+          <Container fluid>
+          <LinkContainer to="/">
+            <Navbar.Brand className="font-weight-bold">
+              <Container>
+              RidgeSight
+              </Container>
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle />
+          <Navbar.Collapse className="justify-content-end">
+            <Nav activeKey={window.location.pathname}>
+              {isAuthenticated ? (
+                <>
+                <Navbar.Collapse className="justify-content-end">
+                  <LinkContainer to="/profile">
+                    <Nav.Link>Profile</Nav.Link>
+                  </LinkContainer>
+                </Navbar.Collapse>
+                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                </>
+                
+              ) : (
+                <>
+                  <LinkContainer to="/signup">
+                    <Nav.Link>Signup</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/login">
+                    <Nav.Link>Login</Nav.Link>
+                  </LinkContainer>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+          <Routes />
+        </AppContext.Provider>
+      </div>
+    )
   );
 }
 

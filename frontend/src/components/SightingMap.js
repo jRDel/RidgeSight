@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import "./SightingMap.css";
 
 function SightingMap() {
 
   const [selected, setSelected] = useState({});
+  const [upvoted, setUpvoted] = useState(false);
+  const [downvoted, setDownvoted] = useState(false);
 
   const onSelect = (item) => {
     setSelected(item);
@@ -28,7 +33,8 @@ function SightingMap() {
         lat: 39.249357, 
         lng: -119.963448
       },
-      username: "username",
+      sighter: "sighter",
+      sightee: "sightee",
     },
     {
         title: "Title2",
@@ -38,7 +44,8 @@ function SightingMap() {
           lat: 39.251895, 
           lng: -119.944330
         },
-        username: "username2",
+        sighter: "sighter",
+        sightee: "sightee",
     },
     {
       title: "Title3",
@@ -48,7 +55,8 @@ function SightingMap() {
         lat: 39.252993, 
         lng: -119.951344
       },
-      username: "username3",
+      sighter: "sighter",
+      sightee: "sightee",
   }
 ]
 
@@ -78,9 +86,55 @@ function SightingMap() {
                     <h5>{selected.title}</h5>
                     <p>{selected.description}</p>
                     <img src={selected.image} width="100px" height="100px"></img>
-                    <div className="my-3">
-                        Seen here: <a href={`/users/${selected.username}`}>{selected.username}</a>
+                    <div className="mt-3">
+                        Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightee}</a>
                     </div>
+                    <div className="mt-2 mb-3">
+                      Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighter}</a>
+                    </div>
+
+                    {!upvoted && !downvoted && 
+                      <div>
+                        <button className="vote-button" onClick={() => {
+                          setUpvoted(true);
+                          console.log("upvoted");
+                        }}>
+                          <FontAwesomeIcon icon={faThumbsUp} />
+                        </button>
+                        <button className="vote-button" onClick={() => {
+                          setDownvoted(true);
+                          console.log("downvoted");
+                          }}>
+                          <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
+                        </button>
+                      </div>
+                    }
+
+                    { upvoted && 
+                      <div>
+                        <button className="upvoted"><FontAwesomeIcon icon={faThumbsUp} /></button>
+                        <button className="vote-button" onClick={() => {
+                            setDownvoted(true);
+                            setUpvoted(false);
+                            console.log("downvoted");
+                          }}>
+                            <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
+                        </button>
+                      </div>
+                    }
+
+                    { downvoted && 
+                      <div>
+                        <button className="vote-button" onClick={() => {
+                            setUpvoted(true);
+                            setDownvoted(false);
+                            console.log("upvoted");
+                          }}>
+                            <FontAwesomeIcon icon={faThumbsUp} />
+                        </button>
+                        <button className="downvoted"><FontAwesomeIcon className="mx-3" icon={faThumbsDown} /></button>
+                      </div>
+                    }
                 </div>
           </InfoWindowF>
           )

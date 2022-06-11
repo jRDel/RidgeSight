@@ -9,10 +9,18 @@ import NewSighting from "./pages/NewSighting";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
+
 export default function Links() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+            <AuthenticatedRoute>
+            <Home />
+            </AuthenticatedRoute>
+        }
+      />
       <Route
         path="/login"
         element={
@@ -30,10 +38,26 @@ export default function Links() {
         }
       />
       <Route
+        path="/"
+        element={
+            <AuthenticatedRoute>
+            <Home />
+            </AuthenticatedRoute>
+        }
+      />
+      <Route
         path="/sighting/new"
         element={
             <AuthenticatedRoute>
             <NewSighting />
+            </AuthenticatedRoute>
+        }
+      />
+      <Route
+        path="/profile/:id"
+        element={
+            <AuthenticatedRoute>
+            <Profile />
             </AuthenticatedRoute>
         }
       />

@@ -1,0 +1,8 @@
+.map {
+    margin-left: auto;
+    margin-right: auto;
+}
+.card{
+    display: flex;
+    justify-content: center;
+}

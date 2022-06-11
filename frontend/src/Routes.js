@@ -54,7 +54,7 @@ export default function Links() {
         }
       />
       <Route
-        path="/profile/:id"
+        path="/profile"
         element={
             <AuthenticatedRoute>
             <Profile />

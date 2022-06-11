@@ -7,7 +7,7 @@ export function ApiStack({ stack, app }) {
     // Create the API
     const api = new Api(stack, "Api", {
         defaults: {
-            // authorizer: "iam",
+            //  authorizer: "iam", 
             function: {
                 permissions: [table],
                 environment: {
@@ -17,9 +17,9 @@ export function ApiStack({ stack, app }) {
         },
         routes: {
             "GET /": "functions/lambda.handler",
-            "GET /profile/{id}": "functions/profile.main",
-            "GET /profile": "functions/profile.main",
-            "GET /sighting": "functions/sighting.main",
+            "GET /profile/{id}": "functions/getProfileById.main",
+            "GET /profile": "functions/getAllProfiles.main",
+            "GET /sighting": "functions/getSightings.main",
             "POST /sighting": "functions/sighting.main",
             "GET /scoreboard": "functions/scoreboard.main",
         },

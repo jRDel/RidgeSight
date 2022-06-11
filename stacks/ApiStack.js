@@ -20,8 +20,9 @@ export function ApiStack({ stack, app }) {
             "GET /profile/{id}": "functions/profile.main",
             "GET /profile": "functions/profile.main",
             "GET /sighting": "functions/sighting.main",
-            "POST /sighting": "functions/sighting.main",
+            "POST /sighting": "functions/createSighting.main",
             "GET /scoreboard": "functions/scoreboard.main",
+            "POST /vote": "functions/vote.main"
         },
     });
 

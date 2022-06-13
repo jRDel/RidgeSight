@@ -12,13 +12,19 @@ import LoaderButton from "./LoaderButton";
 import CreateSightingMap from "./CreateSightingMap";
 import { useAppContext } from "../lib/contextLib";
 import FormLabel from "react-bootstrap/esm/FormLabel";
+import { Auth } from 'aws-amplify';
 
 function NewSightingPopup() {
   const nav = useNavigate();
   const file = useRef(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [tagged, setTagged] = useState("");
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  const [sightedName, setSightedName] = useState([]);
+  const [sightedId, setSightedId] = useState([]);
+  const [sighterName, setSighterName] = useState("");
+  const [sighterId, setSighterId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   function renderChoosePage(){
@@ -27,7 +33,7 @@ function NewSightingPopup() {
   function validateForm(){
     return title.length > 0 &&
     description.length > 0 &&
-    tagged
+    sightedName
   }
   
   function handleFileChange(event) {
@@ -36,6 +42,10 @@ function NewSightingPopup() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+
+    const { attributes } = await Auth.currentAuthenticatedUser();
+    setSighterId(attributes.sub);
+    setSighterName(attributes.given_name + " " + attributes.family_name);
   
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
@@ -49,9 +59,25 @@ function NewSightingPopup() {
     setIsLoading(true);
   
     try {
-      const attachment = file.current ? await s3Upload(file.current) : null;
+      const pictureArn = file.current ? await s3Upload(file.current) : null;
+
+      let sighting = {
+        title: "Jake Sighted at Bowling Alley!",
+        description: "stuff",
+        pictureArn: "stuff",
+        latitude: 39.247229,
+        logitude: -119.948557,
+        sighterId: 0,
+        sightedId: [1,2],
+        sightedName: ["Jake"],
+        sighterName: "Jared",
+        //thumbsUp: 4,
+        //thumbsDown: 1,
+        //createdAt: "2022-06-09",
+      }
   
-      await createSighting({ title, description, tagged, attachment });
+      //await createSighting({ title, description, pictureArn, longitude, latitude, sighterId, sightedId, sighterName, sightedName });
+      await createSighting(sighting);
       nav("/");
     } catch (e) {
       onError(e);
@@ -59,9 +85,9 @@ function NewSightingPopup() {
     }
   }
 
-  function createSighting(note) {
+  function createSighting(sighting) {
     return API.post("ridgesight", "/sighting", {
-      body: note,
+      body: sighting,
     });
   }
 
@@ -94,11 +120,11 @@ function NewSightingPopup() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </Form.Group>
-                <Form.Group controlId="tagged">
+                <Form.Group controlId="sightedName">
                   <Form.Label>Who is it?</Form.Label>
                   <Form.Select
-                  value={tagged}
-                  onChange={(e) => setTagged(e.target.value)}
+                  value={sightedName}
+                  onChange={(e) => setSightedName(e.target.value)}
                   >
                     <option>Choose a Ridgeliner!</option>
                     <option>User 1</option>

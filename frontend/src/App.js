@@ -60,6 +60,9 @@ function App() {
                   <LinkContainer to="/profile">
                     <Nav.Link>Profile</Nav.Link>
                   </LinkContainer>
+                  <LinkContainer to="/users">
+                    <Nav.Link>Users</Nav.Link>
+                  </LinkContainer>
                 </Navbar.Collapse>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
                 </>

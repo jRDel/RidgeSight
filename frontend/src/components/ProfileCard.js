@@ -7,7 +7,7 @@ function ProfileCard(user) {
         <div className="card-header">Awards</div>
         <ul className="list-group list-group-flush">
             {
-                user.awards.map((award, index) => {
+                user.awards?.map((award, index) => {
                     return <li key={index} className="list-group-item">{award}</li>
                 })
             }

@@ -84,8 +84,10 @@ function Profile() {
                     }
                 
                 </div>
-
-                <div className="col-8">
+                <div className="col-1">
+                    <div className="vr"></div>
+                </div>
+                <div className="col-7">
                     <h1>Sightings of {userDetails.firstname} {userDetails.lastname}</h1>
                     <SightingMap />
                 </div>

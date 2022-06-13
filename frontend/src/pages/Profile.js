@@ -7,36 +7,36 @@ import "./Profile.css";
 import { API } from 'aws-amplify';
 
 function Profile() {
-    const { id } = useParams();
+    //const { id } = useParams();
 
     const [editMode, setEditMode] = useState(false);
 
-    // const user = {
-    //     username: "Name",
-    //     description: "This is info about me.",
-    //     image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
-    //     awards: ["Most Disliked", "Best Fit"],
-    // }
+    const user = {
+        firstname: "Mary",
+        lastname: "Rankin",
+        image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
+        awards: ["Most Disliked", "Best Fit"],
+    }
     
-    const [user, setUser] = useState(null);
+    //const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        function loadUser() {
-            return API.get("ridgesight", `/profile/${id}`);
-        }
+    // useEffect(() => {
+    //     function loadUser() {
+    //         return API.get("ridgesight", `/profile/${id}`);
+    //     }
 
-        async function onLoad() {
-            try {
-                const user = await loadUser();
+    //     async function onLoad() {
+    //         try {
+    //             const user = await loadUser();
 
-                setUser(user);
-            } catch (e) {
-                console.log(e);
-            }
-        }
+    //             setUser(user);
+    //         } catch (e) {
+    //             console.log(e);
+    //         }
+    //     }
 
-        onLoad();        
-    }, [id])
+    //     onLoad();        
+    // }, [id])
 
     return <>
         <div className="container">
@@ -59,7 +59,7 @@ function Profile() {
                 </div>
 
                 <div className="col-8">
-                    <h1>Sightings of {user.username}</h1>
+                    <h1>Sightings of {user.firstname} {user.lastname}</h1>
                     <SightingMap />
                 </div>
             </div>

@@ -71,8 +71,8 @@ function NewSightingPopup() {
 
 
   return (
-    <div>
-          <Card style={{ width: '48rem' }}>
+    <div className = "card">
+          <Card style={{ width: '48rem', margin: 'auto'}}>
           <Card.Body>
             <Card.Header as="h3">New Sighting</Card.Header>
             <div className="NewSighting">

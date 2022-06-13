@@ -21,7 +21,7 @@ function CreateSightingMap() {
 const onMarkerDragEnd = (e) => {
   const lat = e.latLng.lat();
   const lng = e.latLng.lng();
-  setCurrentPosition({ lat, lng})
+  setCurrentPosition({ lat, lng })
 };
 
 useEffect(() => {
@@ -29,7 +29,7 @@ useEffect(() => {
 }, [currentPosition])
 
   return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY} preventGoogleFontsLoading loadingElement={Loading}>
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY} loadingElement={Loading}>
       <GoogleMap
         mapContainerStyle={mapStyle}
         zoom={15}

@@ -98,7 +98,7 @@ function NewSightingPopup() {
 
   return (
     <div className = "card">
-          <Card style={{ width: '48rem', margin: 'auto'}}>
+          <Card style={{ width: '100%', margin: 'auto'}}>
           <Card.Body>
             <Card.Header as="h3">New Sighting</Card.Header>
             <div className="NewSighting">
@@ -137,7 +137,9 @@ function NewSightingPopup() {
                 </Form.Group>
                 <FormLabel>Choose where you saw this Ridgeliner</FormLabel>
                 <br />
-                <CreateSightingMap />
+                <div className="map">
+                  <CreateSightingMap />
+                </div>
                 
                 <LoaderButton
                   block

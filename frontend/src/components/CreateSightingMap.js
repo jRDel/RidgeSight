@@ -7,8 +7,8 @@ function CreateSightingMap() {
     lng: -119.9527});
   
     const mapStyle = {        
-      height: "24rem",
-      width: "24rem"
+      height: "40rem",
+      width: "64rem"
     }
 
     const Loading = <div>Loading. Refresh if it takes too long!</div>

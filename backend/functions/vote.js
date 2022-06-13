@@ -7,26 +7,27 @@ export const main = handler(async (event) => {
 
     const voteParams = {
         Key: {
-            "pk": {
+            pk: {
                 S: "SIGHTING"
-                }, 
-            "sk": {
-                S: data.id
+            }, 
+            sk: {
+                S: data.sightingId
             }
         }, 
         UpdateExpression: "SET thumbsUp = thumpsUp + :inc",
         ExpressionAttributeValues: {
-            ":inc": {"N": data.vote}
+            ":inc": data.vote,
         },
-        ReturnValues: "Updated_NEW",
+        ReturnValues: "UPDATED_NEW",
         TableName: process.env.TABLE_NAME,
-        IndexName: "pkIdIndex"
     }
     
     let votePromise = dynamoDb.update(voteParams)
 
     const result = await votePromise;
     console.log("finished executing all puts result is ", result);
+
+    // TODO need to update the user with the vote
 
     return result;
 });

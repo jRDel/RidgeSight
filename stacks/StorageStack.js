@@ -16,11 +16,11 @@ export function StorageStack({ stack, app }) {
     fields: {
       pk: "string",
       sk: "string",
-      id: "string",
+      createdAt: "string"
     },
     primaryIndex: { partitionKey: "pk", sortKey: "sk" },
     localIndexes: {
-      pkIdIndex: { sortKey: "id" },
+      pkCreatedAt: { sortKey: "createdAt" },
     },
   });
 

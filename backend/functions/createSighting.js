@@ -33,7 +33,7 @@ export const main = handler(async (event) => {
         TableName: process.env.TABLE_NAME,
         Item: {
             "pk": "SIGHTING",
-            "sk": sighting.createdAt +"-"+sighting.id,
+            "sk": sighting.id,
             ...sighting
         },
     };

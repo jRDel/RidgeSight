@@ -4,7 +4,7 @@ import { StorageStack } from "./StorageStack";
 import { ApiStack } from "./ApiStack";
 
 export function AuthStack({ stack, app }) {
-  const { bucket } = use(StorageStack);
+  const { bucket, table } = use(StorageStack);
   const { api } = use(ApiStack);
 
   /*
@@ -23,7 +23,13 @@ export function AuthStack({ stack, app }) {
     },
     login: ["email"],
     triggers: {
-      postConfirmation: "functions/newUser.main"
+      postConfirmation: {
+          permissions: [table],
+          environment: {
+              TABLE_NAME: table.tableName,
+          },
+          handler: "functions/newUser.main"
+      }
     }
   });
 

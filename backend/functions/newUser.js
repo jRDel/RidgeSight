@@ -2,14 +2,14 @@ import dynamoDb from "../util/dynamodb";
 
 export const main = async (event, context) => {
     console.log(event);
-
+    console.log("table is ", process.env.TABLE_NAME)
     // If the required parameters are present, proceed
     if (event.request.userAttributes.sub) {
         let user = {
-            'id': {S: event.request.userAttributes.sub},
-            "firstname": {S: event.request.userAttributes.given_name},
-            "lastname":  {S: event.request.userAttributes.family_name},
-            "email": {S: event.request.userAttributes.email},
+            'id': event.request.userAttributes.sub,
+            "firstname": event.request.userAttributes.given_name,
+            "lastname":  event.request.userAttributes.family_name,
+            "email": event.request.userAttributes.email,
             "pictureArn": null,
             "awards": [],
             "votes": {}
@@ -24,7 +24,7 @@ export const main = async (event, context) => {
                 "lastname":  user.lastname,
                 "pictureArn": user.pictureArn,
             },
-            TableName: tableName
+            TableName: process.env.TABLE_NAME,
         };
 
         let dbUserProfileParams = {
@@ -33,7 +33,7 @@ export const main = async (event, context) => {
                 "sk": "PROFILE",
                 ...user
             },
-            TableName: tableName
+            TableName: process.env.TABLE_NAME,
         };
 
         // Call DynamoDB

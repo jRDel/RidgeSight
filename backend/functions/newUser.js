@@ -17,7 +17,7 @@ export const main = async (event, context) => {
         let dbUserItemParams = {
             Item: {
                 "pk": "USER",
-                "sk": user.firstname+'-'+user.lastname+'-'+user.id,
+                "sk": user.id,
                 "id": user.id,
                 "firstname": user.firstname,
                 "lastname":  user.lastname,

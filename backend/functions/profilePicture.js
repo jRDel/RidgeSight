@@ -2,10 +2,9 @@ import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
-    console.log(event);
     const data = JSON.parse(event.body);
     if ("userId" in event.queryStringParameters){
-        var params = {
+        var profileParams = {
             TableName: process.env.TABLE_NAME,
             Key: {
                 pk: "USER-" + event.queryStringParameters.userId,
@@ -16,9 +15,21 @@ export const main = handler(async (event) => {
             },
             UpdateExpression: "set pictureArn = :arn"
         };
-        var result = await dynamoDb.update(params);
-        return params.Item;
+        var userParams = {
+            TableName: process.env.TABLE_NAME,
+            Key: {
+                pk: "USER",
+                sk: event.queryStringParameters.userId
+            },
+            ExpressionAttributeValues: {
+                ":arn": data.attachment
+            },
+            UpdateExpression: "set pictureArn = :arn"
+        };
+        await dynamoDb.update(profileParams);
+        await dynamoDb.update(userParams);
+        return profileParams.Item, userParams.Item;
     } else {
-        throw new Error("id parameter required")
+        throw new Error("userId parameter required")
     }
 });

@@ -21,7 +21,8 @@ export function ApiStack({ stack, app }) {
         routes: {
             "GET /": "functions/lambda.handler",
             "POST /sighting": "functions/createSighting.main",
-            //"POST /profile": "",
+            "POST /profile": "functions/newUser.main",
+            "POST /profilePicture": "functions/profilePicture.main",
             "GET /profile": "functions/getProfiles.main",
             "GET /sighting": "functions/getSightings.main",
             "GET /scoreboard": "functions/scoreboard.main",

@@ -1,7 +1,8 @@
 import dynamoDb from "../util/dynamodb";
 
 export const main = async (event, context) => {
-    console.log(event);
+    const data = JSON.parse(event.body);
+    console.log(event,data);
     console.log("table is ", process.env.TABLE_NAME)
     // If the required parameters are present, proceed
     if (event.request.userAttributes.sub) {
@@ -10,7 +11,7 @@ export const main = async (event, context) => {
             "firstname": event.request.userAttributes.given_name,
             "lastname":  event.request.userAttributes.family_name,
             "email": event.request.userAttributes.email,
-            "pictureArn": null,
+            "pictureArn": {S: data.attachment},
             "awards": [],
             "votes": {}
         }

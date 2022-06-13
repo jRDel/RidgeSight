@@ -26,7 +26,8 @@ export function ApiStack({ stack, app }) {
             "GET /profile": "functions/getProfiles.main",
             "GET /sighting": "functions/getSightings.main",
             "GET /scoreboard": "functions/scoreboard.main",
-            "POST /vote": "functions/vote.main"
+            "POST /vote": "functions/vote.main",
+            "$default"   : "functions/dne.main",
         },
     });
 

@@ -44,13 +44,19 @@ function Profile() {
     useEffect(() => {
         async function onLoad(){
             try{
-                Auth.currentAuthenticatedUser({
+                let details = await Auth.currentAuthenticatedUser({
                     bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
-                }).then(user => console.log(user))
-                .catch(err => console.log(err));
+                })
+                let userDetail = {
+                    firstname: details.attributes.given_name,
+                    lastname: details.attributes.family_name,
+                    awards: ["Best Fit", "Most liked"],
+                    //Will eventually need pfp and awards here as well
+                }
+                console.log(userDetail);
+                setuserDetails(userDetail);
                 //setuserDetails(details);
-                console.log("USER DETAILS:" + user.email);
-                //Get user profile stuff here
+                //Get user profile stuff here like image and awards
             }
             catch(e){
                 onError(e);
@@ -65,14 +71,14 @@ function Profile() {
                 <div className="col-4">
                     {editMode && 
                         <div>
-                            <EditProfileCard { ...user } />
+                            <EditProfileCard { ...userDetails } />
                             <button className="mt-3 btn btn-primary" onClick={() => setEditMode(false)}>Cancel</button>
                         </div>
                     }
 
                     {!editMode &&
                         <div>
-                            <ProfileCard { ...user } />
+                            <ProfileCard { ...userDetails } />
                             <button className="mt-3 btn btn-primary" onClick={() => setEditMode(true)}>Edit</button>
                         </div>
                     }

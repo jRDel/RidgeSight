@@ -74,7 +74,7 @@ function SightingMap() {
     }
 
     onLoad();
-  })
+  }, [sightings])
 
   function loadSightings(){
     return API.get("ridgesight", "/sighting");

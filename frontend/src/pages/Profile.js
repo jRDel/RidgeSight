@@ -44,8 +44,12 @@ function Profile() {
     useEffect(() => {
         async function onLoad(){
             try{
-                //const details = await Auth.currentAuthenticatedUser();
+                Auth.currentAuthenticatedUser({
+                    bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+                }).then(user => console.log(user))
+                .catch(err => console.log(err));
                 //setuserDetails(details);
+                console.log("USER DETAILS:" + user.email);
                 //Get user profile stuff here
             }
             catch(e){
@@ -53,7 +57,7 @@ function Profile() {
             }
         }
         onLoad();
-    })
+    }, [])
 
     return <>
         <div className="container">

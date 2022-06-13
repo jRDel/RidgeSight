@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import { onError } from "../lib/errorLib";
 import { API } from "aws-amplify";
@@ -13,14 +13,15 @@ import CreateSightingMap from "./CreateSightingMap";
 import { useAppContext } from "../lib/contextLib";
 import FormLabel from "react-bootstrap/esm/FormLabel";
 import { Auth } from 'aws-amplify';
+import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
 
 function NewSightingPopup() {
   const nav = useNavigate();
   const file = useRef(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
+  const [latitude, setLatitude] = useState(39.2497);
+  const [longitude, setLongitude] = useState(-119.9527);
   const [sightedName, setSightedName] = useState([]);
   const [sightedId, setSightedId] = useState([]);
   const [sighterName, setSighterName] = useState("");
@@ -61,23 +62,23 @@ function NewSightingPopup() {
     try {
       const pictureArn = file.current ? await s3Upload(file.current) : null;
 
-      let sighting = {
-        title: "Jake Sighted at Bowling Alley!",
-        description: "stuff",
-        pictureArn: "stuff",
-        latitude: 39.247229,
-        logitude: -119.948557,
-        sighterId: 0,
-        sightedId: [1,2],
-        sightedName: ["Jake"],
-        sighterName: "Jared",
-        //thumbsUp: 4,
-        //thumbsDown: 1,
-        //createdAt: "2022-06-09",
-      }
+      // let sighting = {
+      //   title: "Jake Sighted at Bowling Alley!",
+      //   description: "stuff",
+      //   pictureArn: "stuff",
+      //   latitude: 39.247229,
+      //   longitude: -119.948557,
+      //   sighterId: 0,
+      //   sightedId: [1,2],
+      //   sightedName: ["Jake"],
+      //   sighterName: "Jared",
+      //   //thumbsUp: 4,
+      //   //thumbsDown: 1,
+      //   //createdAt: "2022-06-09",
+      // }
   
-      //await createSighting({ title, description, pictureArn, longitude, latitude, sighterId, sightedId, sighterName, sightedName });
-      await createSighting(sighting);
+      await createSighting({ title, description, pictureArn, longitude, latitude, sighterId, sightedId, sighterName, sightedName });
+      //await createSighting(sighting);
       nav("/");
     } catch (e) {
       onError(e);
@@ -95,6 +96,31 @@ function NewSightingPopup() {
     //Here should get users from API endpoint
   }
 
+//MAP
+  const [currentPosition, setCurrentPosition] = useState({
+    lat: 39.2497, 
+    lng: -119.9527
+  });
+
+  const mapStyle = {        
+    height: "40rem",
+    width: "64rem"
+  }
+
+  const Loading = <div>Loading. Refresh if it takes too long!</div>
+  
+  const mapCenter = {
+    lat: 39.2497, 
+    lng: -119.9527
+  }
+
+const onMarkerDragEnd = (e) => {
+  const lat =  e.latLng.lat();
+  const lng = e.latLng.lng()
+  setLatitude(lat);
+  setLongitude(lng);
+  setCurrentPosition({ lat, lng })
+};
 
   return (
     <div className = "card">
@@ -138,7 +164,24 @@ function NewSightingPopup() {
                 <FormLabel>Choose where you saw this Ridgeliner</FormLabel>
                 <br />
                 <div className="map">
-                  <CreateSightingMap />
+                  <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY} loadingElement={Loading}>
+                    <GoogleMap
+                      mapContainerStyle={mapStyle}
+                      zoom={15}
+                      center={mapCenter}
+                      mapTypeId='satellite'
+                    >
+
+                      {
+                          currentPosition.lat ? 
+                          <MarkerF
+                          position={currentPosition}
+                          onDragEnd={(e) => onMarkerDragEnd(e)}
+                          draggable={true} /> :
+                          null
+                        }
+                    </GoogleMap>
+                  </LoadScript>
                 </div>
                 
                 <LoaderButton

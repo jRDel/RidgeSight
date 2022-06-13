@@ -5,6 +5,7 @@ import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import "./SightingMap.css";
 import { onError } from '../lib/errorLib';
 import { API } from 'aws-amplify';
+import { useAppContext } from "../lib/contextLib";
 
 function SightingMap() {
 
@@ -12,6 +13,7 @@ function SightingMap() {
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
   const [sightings, setSightings] = useState([]);
+  const { isAuthenticated } = useAppContext();
 
   const onSelect = (item) => {
     setSelected(item);
@@ -27,57 +29,59 @@ function SightingMap() {
     lng: -119.9527
   }
 
-  /* const sightings = [
-    {
-      title: "Title",
-      description: "Description goes here.",
-      image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
-      location: {
-        lat: 39.249357, 
-        lng: -119.963448
-      },
-      sighter: "sighter",
-      sightee: "sightee",
-    },
-    {
-        title: "Title2",
-        description: "Description goes here.",
-        image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
-        location: {
-          lat: 39.251895, 
-          lng: -119.944330
-        },
-        sighter: "sighter",
-        sightee: "sightee",
-    },
-    {
-      title: "Title3",
-      description: "Description goes here.",
-      image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
-      location: {
-        lat: 39.252993, 
-        lng: -119.951344
-      },
-      sighter: "sighter",
-      sightee: "sightee",
-    }
-  ] */
+  // const testSightings = [
+  //   {
+  //     title: "Title",
+  //     description: "Description goes here.",
+  //     image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
+  //     location: {
+  //       lat: 39.249357, 
+  //       lng: -119.963448
+  //     },
+  //     sighter: "sighter",
+  //     sightee: "sightee",
+  //   },
+  //   {
+  //       title: "Title2",
+  //       description: "Description goes here.",
+  //       image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
+  //       location: {
+  //         lat: 39.251895, 
+  //         lng: -119.944330
+  //       },
+  //       sighter: "sighter",
+  //       sightee: "sightee",
+  //   },
+  //   {
+  //     title: "Title3",
+  //     description: "Description goes here.",
+  //     image: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
+  //     location: {
+  //       lat: 39.252993, 
+  //       lng: -119.951344
+  //     },
+  //     sighter: "sighter",
+  //     sightee: "sightee",
+  //   }
+  // ]
 
   useEffect(() => {
     async function onLoad(){
       try{
-        const sightings = await loadSightings();
-        setSightings(sightings);
+        const sightingsArray = await loadSightings();
+        console.log(sightingsArray);
+        setSightings(sightingsArray);
+        console.log(sightings);
       } catch(e){
         onError(e);
       }
     }
 
     onLoad();
-  }, [])
+  }, [isAuthenticated])
 
-  function loadSightings(){
-    return API.get("ridgesight", "/sighting");
+  async function loadSightings(){
+    return await API.get("ridgesight", "/sighting");
   }
 
 
@@ -89,7 +93,7 @@ function SightingMap() {
         center={mapCenter}
         mapTypeId='satellite'
       >
-        {
+        { sightings &&
           sightings.map(item => {
             return (<MarkerF key={item.title} position={item.location} onClick={() => onSelect(item)}/>)
           })

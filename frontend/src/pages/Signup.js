@@ -104,6 +104,7 @@ export default function Signup() {
         <Form.Group controlId="given_name" size="lg">
           <Form.Label>First Name</Form.Label>
           <Form.Control
+            autoFocus
             type="text"
             value={fields.given_name}
             onChange={handleFieldChange}
@@ -120,7 +121,6 @@ export default function Signup() {
         <Form.Group controlId="email" size="lg">
           <Form.Label>Email</Form.Label>
           <Form.Control
-            autoFocus
             type="email"
             value={fields.email}
             onChange={handleFieldChange}

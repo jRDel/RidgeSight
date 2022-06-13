@@ -9,6 +9,6 @@
 }
 .modebutton{
     bottom: 0;
-    position:absolute;
+    position: fixed;
     right: 0%;
 }

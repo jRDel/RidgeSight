@@ -23,7 +23,7 @@
 
 .bottomtext{
   bottom: 0;
-  position: absolute;
+  position: fixed;
   color: rgb(183, 183, 183);
   text-align: center;
   margin-left: 25%;

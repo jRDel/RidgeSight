@@ -8,6 +8,7 @@ import ListGroupItem from "react-bootstrap/esm/ListGroupItem";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import { API } from "aws-amplify";
+import { Auth } from "aws-amplify";
 
 export default function Users(){
     const [users, setUsers] = useState([]);
@@ -48,9 +49,10 @@ export default function Users(){
 
     function renderOtherProfile(value){
         console.log(value);
-        nav('/');
+        nav('/otherprofile', {state: {firstname: value.firstname, lastname: value.lastname}});
     }
 
+    //When more accounts are made, blank out profile button on own user using Auth.currentAuthenticatedUser
     return(
         <Container>
             <Row>

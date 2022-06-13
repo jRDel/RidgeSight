@@ -33,7 +33,7 @@ export const main = handler(async (event) => {
         };
         var result = await dynamoDb.query(paramsSighter);
     } else if ("sighterId" in event.queryStringParameters && "sightedId" in event.queryStringParameters){
-        throw new Error("sighterId and sightedId can not be used together.")
+        throw new Error("sighterId and sightedId can not be used together.");
     }
 
     if (!result.Items) {

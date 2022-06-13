@@ -8,6 +8,7 @@ export function ApiStack({ stack, app }) {
 
     // Create the API
     const api = new Api(stack, "Api", {
+        cors: true,
         defaults: {
             //  authorizer: "iam", 
             function: {
@@ -20,8 +21,8 @@ export function ApiStack({ stack, app }) {
         routes: {
             "GET /": "functions/lambda.handler",
             "POST /sighting": "functions/createSighting.main",
-            "GET /profile/{id}": "functions/getProfileById.main",
-            "GET /profile": "functions/getAllProfiles.main",
+            //"POST /profile": "",
+            "GET /profile": "functions/getProfiles.main",
             "GET /sighting": "functions/getSightings.main",
             "GET /scoreboard": "functions/scoreboard.main",
             "POST /vote": "functions/vote.main"

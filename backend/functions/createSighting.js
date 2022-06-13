@@ -1,6 +1,6 @@
-import * as uuid from "uuid";
 import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
+import * as uuid from "uuid";
 
 const attributes = [
     "title",
@@ -33,7 +33,7 @@ export const main = handler(async (event) => {
         TableName: process.env.TABLE_NAME,
         Item: {
             "pk": "SIGHTING",
-            "sk": sighting.createdAt +"-"+sighting.id,
+            "sk": sighting.id,
             ...sighting
         },
     };
@@ -65,8 +65,6 @@ export const main = handler(async (event) => {
         return dynamoDb.put(sightedParams);
     })
 
-    const result = await Promise.all([sightingDataPromise, sightingDataParams, sighterPromise, ...sightingPromises])
+    const result = await Promise.all([sightingDataPromise, sighterPromise, ...sightingPromises]);
     console.log("finished executing all puts result is ", result);
-
-    return "ok";
 });

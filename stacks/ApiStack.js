@@ -4,8 +4,11 @@ import { StorageStack } from "./StorageStack";
 export function ApiStack({ stack, app }) {
     const { table } = use(StorageStack);
 
+    //console.log("STACK table name is ", table.tableName);
+
     // Create the API
     const api = new Api(stack, "Api", {
+        cors: true,
         defaults: {
             //  authorizer: "iam", 
             function: {

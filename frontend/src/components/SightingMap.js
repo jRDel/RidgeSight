@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import "./SightingMap.css";
+import { onError } from '../lib/errorLib';
+import { API } from 'aws-amplify';
 
 function SightingMap() {
 
   const [selected, setSelected] = useState({});
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+  const [sightings, setSightings] = useState([]);
 
   const onSelect = (item) => {
     setSelected(item);
@@ -24,7 +27,7 @@ function SightingMap() {
     lng: -119.9527
   }
 
-  const sightings = [
+  /* const sightings = [
     {
       title: "Title",
       description: "Description goes here.",
@@ -57,8 +60,26 @@ function SightingMap() {
       },
       sighter: "sighter",
       sightee: "sightee",
+    }
+  ] */
+
+  useEffect(() => {
+    async function onLoad(){
+      try{
+        const sightings = await loadSightings();
+        setSightings(sightings);
+      } catch(e){
+        onError(e);
+      }
+    }
+
+    onLoad();
+  }, [sightings])
+
+  function loadSightings(){
+    return API.get("ridgesight", "/sighting");
   }
-]
+
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}>

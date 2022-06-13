@@ -5,11 +5,14 @@ import EditProfileCard from '../components/EditProfileCard';
 import SightingMap from '../components/SightingMap';
 import "./Profile.css";
 import { API } from 'aws-amplify';
+import { onError } from '../lib/errorLib';
+import { Auth } from "aws-amplify";
 
 function Profile() {
     //const { id } = useParams();
 
     const [editMode, setEditMode] = useState(false);
+    const [userDetails, setuserDetails] = useState({});
 
     const user = {
         firstname: "Mary",
@@ -38,6 +41,20 @@ function Profile() {
     //     onLoad();        
     // }, [id])
 
+    useEffect(() => {
+        async function onLoad(){
+            try{
+                //const details = await Auth.currentAuthenticatedUser();
+                //setuserDetails(details);
+                //Get user profile stuff here
+            }
+            catch(e){
+                onError(e);
+            }
+        }
+        onLoad();
+    })
+
     return <>
         <div className="container">
             <div className="row mt-5">
@@ -59,7 +76,7 @@ function Profile() {
                 </div>
 
                 <div className="col-8">
-                    <h1>Sightings of {user.firstname} {user.lastname}</h1>
+                    <h1>Sightings of {userDetails.firstname} {userDetails.lastname}</h1>
                     <SightingMap />
                 </div>
             </div>

@@ -72,6 +72,8 @@ function SightingMap() {
         onError(e);
       }
     }
+
+    onLoad();
   })
 
   function loadSightings(){

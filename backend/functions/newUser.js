@@ -10,8 +10,9 @@ export const main = async (event, context) => {
             "lastname":  event.request.userAttributes.family_name,
             "email": event.request.userAttributes.email,
             "pictureArn": null,
-            "awards": [],
-            "votes": {}
+            "awards": null,
+            "thumbsUp": null,
+            "thumbsDown": null
         }
 
         let dbUserItemParams = {

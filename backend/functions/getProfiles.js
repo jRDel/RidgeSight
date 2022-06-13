@@ -12,18 +12,18 @@ export const main = handler(async (event) => {
             }
         };
         var result = await dynamoDb.query(params);
-    } else if ("id" in event.queryStringParameters){
+    } else if ("userId" in event.queryStringParameters){
         var params = {
             TableName: process.env.TABLE_NAME,
             KeyConditionExpression: 'pk = :pk and sk = :sk',
             ExpressionAttributeValues: {
-                ':pk': 'USER' + event.queryStringParameters.id,
+                ':pk': 'USER-' + event.queryStringParameters.userId,
                 ':sk': 'PROFILE'
             }
         };
         var result = await dynamoDb.query(params);
     } else if (!("id" in event.queryStringParameters)){
-        throw new Error("id parameter required")
+        throw new Error("userId parameter required")
     }
     
     

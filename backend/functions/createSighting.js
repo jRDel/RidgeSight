@@ -65,8 +65,6 @@ export const main = handler(async (event) => {
         return dynamoDb.put(sightedParams);
     })
 
-    const result = await Promise.all([sightingDataPromise, sightingDataParams, sighterPromise, ...sightingPromises])
+    const result = await Promise.all([sightingDataPromise, sighterPromise, ...sightingPromises]);
     console.log("finished executing all puts result is ", result);
-
-    return "ok";
 });

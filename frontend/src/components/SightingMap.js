@@ -110,7 +110,7 @@ function SightingMap() {
                 <div>
                     <h5>{selected.title}</h5>
                     <p>{selected.description}</p>
-                    <img src={selected.image} width="100px" height="100px" alt={selected.sightee}></img>
+                    <img src={selected.pictureArn} width="100px" height="100px" alt={selected.sightee}></img>
                     <div className="mt-3">
                         Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightee}</a>
                     </div>

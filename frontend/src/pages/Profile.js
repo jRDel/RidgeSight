@@ -21,25 +21,13 @@ function Profile() {
         awards: ["Most Disliked", "Best Fit"],
     }
     
-    //const [user, setUser] = useState(null);
-
-    // useEffect(() => {
-    //     function loadUser() {
-    //         return API.get("ridgesight", `/profile/${id}`);
-    //     }
-
-    //     async function onLoad() {
-    //         try {
-    //             const user = await loadUser();
-
-    //             setUser(user);
-    //         } catch (e) {
-    //             console.log(e);
-    //         }
-    //     }
-
-    //     onLoad();        
-    // }, [id])
+   async function loadProfilePicture(id){
+        return API.get("ridgesight", "/profile", {
+            queryStringParameters: {
+                userId: id
+            }
+        })
+    }
 
     useEffect(() => {
         async function onLoad(){
@@ -48,13 +36,16 @@ function Profile() {
                     bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
                 })
                 console.log(details);
+                let picture = await loadProfilePicture(details.attributes.sub);
                 let userDetail = {
                     firstname: details.attributes.given_name,
                     lastname: details.attributes.family_name,
                     id: details.attributes.sub,
                     awards: ["Best Fit", "Most liked"],
+                    pictureArn: picture[0].pictureArn,
                     //Will eventually need pfp and awards here as well
                 }
+                //console.log(picture[0].pictureArn);
                 console.log(userDetail);
                 setuserDetails(userDetail);
                 //setuserDetails(details);
@@ -81,7 +72,7 @@ function Profile() {
                     {!editMode &&
                         <div>
                             <ProfileCard { ...userDetails } />
-                            <button className="mt-3 btn btn-primary" onClick={() => setEditMode(true)}>Edit</button>
+                            <button className="mt-3 btn btn-primary" onClick={() => setEditMode(true)}>Edit Profile Picture</button>
                         </div>
                     }
                 

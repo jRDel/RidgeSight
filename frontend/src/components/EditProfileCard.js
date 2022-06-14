@@ -1,15 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import "./EditProfileCard.css";
 import config from "../config.js";
 import { s3Upload } from "../lib/awsLib";
 import { onError } from "../lib/errorLib";
-import { API } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 
 function EditProfileCard(user) {
 
     const [firstname, setFirstname] = useState(user.firstname);
     const [lastname, setLastname] = useState(user.lastname);
     const file = useRef(null);
+    const [photo, setPhoto] = useState("");
+
+    useEffect(() => {
+        async function onLoad() {
+            try {
+                const p = await getProfilePicture();
+                setPhoto(p);
+            } catch (e) {
+                onError(e);
+            }
+        }
+        onLoad();
+    }, [])
+
+    async function getProfilePicture() {
+        if(user.pictureArn){
+            return await Storage.vault.get(user.pictureArn);
+        }
+    }
 
     async function handleFileSubmit(e){
         e.preventDefault();
@@ -53,7 +72,7 @@ function EditProfileCard(user) {
 
 
     return <div className="card mt-2">
-        <img src="https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg" className="card-img-top profile-pic my-4" alt="profile" />
+        <img src={photo} className="card-img-top profile-pic my-4" alt="profile" />
         
         <form onSubmit ={handleFileSubmit}>
             <div class="mb-3 mx-3">
@@ -64,22 +83,7 @@ function EditProfileCard(user) {
                 <button className="btn btn-primary">Upload</button>
             </div>
         </form>
-        <div className="card-header">First name</div>
-        <ul className="list-group list-group-flush">
-            <div className='mx-2'>{user.firstname}</div>
-        </ul>
-        <div className="card-header">Last name</div>
-        <ul className="list-group list-group-flush">
-            <div className='mx-2'>{user.lastname}</div>
-        </ul>
-        <div className="card-header">Awards</div>
-        <ul className="list-group list-group-flush">
-            {
-                user.awards.map((award, index) => {
-                    return <li key={index} className="list-group-item">{award}</li>
-                })
-            }
-        </ul>
+        
     </div>
 }
 

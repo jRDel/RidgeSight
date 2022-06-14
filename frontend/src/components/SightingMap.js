@@ -6,6 +6,7 @@ import "./SightingMap.css";
 import { onError } from '../lib/errorLib';
 import { API, Auth, Storage} from 'aws-amplify';
 import { useAppContext } from "../lib/contextLib";
+import { useNavigate } from "react-router-dom";
 
 function SightingMap() {
 
@@ -14,6 +15,7 @@ function SightingMap() {
   const [downvoted, setDownvoted] = useState(false);
   const [sightings, setSightings] = useState([]);
   const { isAuthenticated } = useAppContext();
+  const nav = useNavigate();
 
   const onSelect = async (item) => {
     if (item.pictureArn) {
@@ -21,7 +23,6 @@ function SightingMap() {
     }
 
     setSelected(item);
-    console.log(item.photo)
   }
   
   const mapStyle = {        
@@ -124,6 +125,11 @@ function SightingMap() {
     castVote();
   }
 
+//   function renderProfile(value){
+//     let nameArray = value.split(" ");
+//     nav('/otherprofile', {state: {firstname: nameArray[0], lastname: nameArray[1]}});
+// }
+
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}>
       <GoogleMap
@@ -150,12 +156,12 @@ function SightingMap() {
                 <div>
                     <h5>{selected.title}</h5>
                     <p>{selected.description}</p>
-                    <img src={selected.photo} width="100px" height="100px" alt={selected.sightedName[0]}></img>
+                    <img src={selected.photo} width="100px" height="100px" alt={selected.sightedName}></img>
                     <div className="mt-3">
-                        Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightedName[0]}</a>
+                        Seen here: <a href="/">{selected.sightedName}</a>
                     </div>
                     <div className="mt-2 mb-3">
-                      Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighterName}</a>
+                      Seen by: <a href="/">{selected.sighterName}</a>
                     </div>
 
                     <div>

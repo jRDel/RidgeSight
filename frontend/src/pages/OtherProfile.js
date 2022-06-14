@@ -22,7 +22,6 @@ function OtherProfile() {
                     awards: ["Best Fit", "Most liked"],
                     //Will eventually need pfp and awards here as well
                 }
-                console.log(userDetail);
                 setuserDetails(userDetail);
                 //setuserDetails(details);
                 //Get user profile stuff here like image and awards

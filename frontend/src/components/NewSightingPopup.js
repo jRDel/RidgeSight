@@ -178,7 +178,7 @@ const onMarkerDragEnd = (e) => {
                     setSightedId([sightedData[0]]);
                   }}
                   >
-                   <option>Select a user</option>   
+                   <option>Who did you see?</option>   
                       { users && 
                         users.map((user, index) => {
                           const test = [

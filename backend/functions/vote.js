@@ -41,6 +41,12 @@ export const main = handler(async (event, context) => {
     } else if (!prevThumbsDown && !prevThumbsUp && vote === -1) {
         voteUpdateExpression = "SET thumbsDown = thumbsDown + :inc";
         userUpdateExpression = "ADD thumbsDown :sightingId";
+    } else if (prevThumbsUp && vote === 0) {
+        voteUpdateExpression = "SET thumbsUp = thumbsUp - :inc";
+        userUpdateExpression = "DELETE thumbsUp :sightingId";
+    } else if (prevThumbsDown && vote === 0) {
+        voteUpdateExpression = "SET thumbsDown = thumbsDown - :inc";
+        userUpdateExpression = "DELETE thumbsDown :sightingId";
     } else {
         console.log("no change needed");
         return "No change needed";

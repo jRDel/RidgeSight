@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import "./SightingMap.css";
 import { onError } from '../lib/errorLib';
-import { API } from 'aws-amplify';
+import { API, Auth, Storage} from 'aws-amplify';
 import { useAppContext } from "../lib/contextLib";
 
 function SightingMap() {
@@ -15,8 +15,13 @@ function SightingMap() {
   const [sightings, setSightings] = useState([]);
   const { isAuthenticated } = useAppContext();
 
-  const onSelect = (item) => {
+  const onSelect = async (item) => {
+    if (item.pictureArn) {
+      item.photo = await Storage.vault.get(item.pictureArn);
+    }
+
     setSelected(item);
+    console.log(item.photo)
   }
   
   const mapStyle = {        
@@ -84,6 +89,41 @@ function SightingMap() {
   }
 
 
+   async function castVote() {
+      console.log('booo', selected,  (await Auth.currentAuthenticatedUser()))
+      let result = await API.post("ridgesight", "/vote", {
+        body: {
+          sightingId: selected.id,
+          userId: (await Auth.currentAuthenticatedUser()).attributes.sub,
+          vote: upvoted ? 1: downvoted ? -1: 0
+        },
+      });
+      console.log('result is ', result)
+    }
+
+
+  async function handleUpvoteClick() {
+    if(upvoted === true) {
+      setUpvoted(false);
+    } else if (upvoted === false) {
+      setUpvoted(true);
+      setDownvoted(false);
+    }
+
+    castVote();
+  }
+
+  async function handleDownvoteClick() {
+    if(downvoted === true) {
+      setDownvoted(false);
+    } else if (downvoted === false) {
+      setDownvoted(true);
+      setUpvoted(false);
+    }
+
+    castVote();
+  }
+
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}>
       <GoogleMap
@@ -95,7 +135,7 @@ function SightingMap() {
       >
         { sightings &&
           sightings.map(item => {
-            return (<MarkerF key={item.title} position={{lat: item.latitude, lng: item.longitude}} onClick={() => onSelect(item)}/>)
+            return (<MarkerF key={item.id} position={{lat: item.latitude, lng: item.longitude}} onClick={() => onSelect(item)}/>)
           })
         }
           
@@ -110,58 +150,22 @@ function SightingMap() {
                 <div>
                     <h5>{selected.title}</h5>
                     <p>{selected.description}</p>
-                    <img src={selected.image} width="100px" height="100px" alt={selected.sightee}></img>
+                    <img src={selected.photo} width="100px" height="100px" alt={selected.sightedName[0]}></img>
                     <div className="mt-3">
-                        Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightee}</a>
+                        Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightedName[0]}</a>
                     </div>
                     <div className="mt-2 mb-3">
-                      Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighter}</a>
+                      Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighterName}</a>
                     </div>
 
-                    {!upvoted && !downvoted && 
-                      <div>
-                        <button className="vote-button" onClick={() => {
-                          setUpvoted(true);
-                          console.log("upvoted");
-                        }}>
+                    <div>
+                        <button className={upvoted === true ? "upvoted": "vote-button"} onClick={handleUpvoteClick}>
                           <FontAwesomeIcon icon={faThumbsUp} />
                         </button>
-                        <button className="vote-button" onClick={() => {
-                          setDownvoted(true);
-                          console.log("downvoted");
-                          }}>
+                        <button className={downvoted === true ? "downvoted": "vote-button"} onClick={handleDownvoteClick}>
                           <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
                         </button>
                       </div>
-                    }
-
-                    { upvoted && 
-                      <div>
-                        <button className="upvoted" onClick={() => setUpvoted(false)}>
-                          <FontAwesomeIcon icon={faThumbsUp} />
-                        </button>
-                        <button className="vote-button" onClick={() => {
-                            setDownvoted(true);
-                            setUpvoted(false);
-                            console.log("downvoted");
-                          }}>
-                            <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
-                        </button>
-                      </div>
-                    }
-
-                    { downvoted && 
-                      <div>
-                        <button className="vote-button" onClick={() => {
-                            setUpvoted(true);
-                            setDownvoted(false);
-                            console.log("upvoted");
-                          }}>
-                            <FontAwesomeIcon icon={faThumbsUp} />
-                        </button>
-                        <button className="downvoted" onClick={() => setDownvoted(false)}><FontAwesomeIcon className="mx-3" icon={faThumbsDown} /></button>
-                      </div>
-                    }
                 </div>
           </InfoWindowF>
           )

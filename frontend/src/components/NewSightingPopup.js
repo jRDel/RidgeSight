@@ -84,8 +84,8 @@ function NewSightingPopup() {
         latitude, 
         longitude, 
         sighterId, 
-        sightedName: sightedName[0], 
-        sightedId: sightedId[0], 
+        sightedName: sightedName, 
+        sightedId: sightedId, 
         sighterName
       }
   

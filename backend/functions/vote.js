@@ -61,7 +61,7 @@ export const main = handler(async (event, context) => {
         ExpressionAttributeValues: {
             ":inc": 1,
         },
-        ReturnValues: "UPDATED_NEW",
+        ReturnValues: "ALL_NEW",
         TableName: process.env.TABLE_NAME,
     }
 
@@ -79,7 +79,7 @@ export const main = handler(async (event, context) => {
     }
 
     const result = await Promise.all([await dynamoDb.update(voteParams), await dynamoDb.update(userParams)])
-    console.log("finished executing all puts result is ", result);
-
-    return "ok";
+    console.log("finished executing all puts result is ", result[0].Attributes);
+    const filteredRes = { thumbsUp: result[0].Attributes.thumbsUp, thumbsDown: result[0].Attributes.thumbsDown};
+    return result[0].Attributes;
 });

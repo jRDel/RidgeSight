@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
@@ -19,10 +19,23 @@ function SightingMap() {
 
   const onSelect = async (item) => {
     if (item.pictureArn) {
+      try {
       item.photo = await Storage.vault.get(item.pictureArn);
+      } catch (error) {
+        console.log("fetching the pictuer didn't work ", error)
+      }
     }
 
     setSelected(item);
+
+    let userProfile = (await API.get("ridgesight", "/profile", {
+      queryStringParameters: {
+        userId: (await Auth.currentAuthenticatedUser()).attributes.sub
+      }
+    }))[0];
+
+    setUpvoted(userProfile.thumbsUp != null && userProfile.thumbsUp.includes(item.id))
+    setDownvoted(userProfile.thumbsDown != null && userProfile.thumbsDown.includes(item.id))
   }
   
   const mapStyle = {        
@@ -90,39 +103,40 @@ function SightingMap() {
   }
 
 
-   async function castVote() {
-      console.log('booo', selected,  (await Auth.currentAuthenticatedUser()))
+   async function castVote(localUp, localDown) {
+      console.log('booo', selected,  (await Auth.currentAuthenticatedUser()), localDown, localUp)
       let result = await API.post("ridgesight", "/vote", {
         body: {
           sightingId: selected.id,
           userId: (await Auth.currentAuthenticatedUser()).attributes.sub,
-          vote: upvoted ? 1: downvoted ? -1: 0
+          vote: localUp ? 1: (localDown ? -1: 0)
         },
       });
-      console.log('result is ', result)
+
+      setSelected(result)
     }
 
 
   async function handleUpvoteClick() {
     if(upvoted === true) {
       setUpvoted(false);
+      castVote(false, downvoted);
     } else if (upvoted === false) {
       setUpvoted(true);
       setDownvoted(false);
+      castVote(true, false);
     }
-
-    castVote();
   }
 
   async function handleDownvoteClick() {
     if(downvoted === true) {
       setDownvoted(false);
+      castVote(upvoted, false)
     } else if (downvoted === false) {
       setDownvoted(true);
       setUpvoted(false);
+      castVote(false, true);
     }
-
-    castVote();
   }
 
   function renderOtherProfile(value){
@@ -166,10 +180,10 @@ function SightingMap() {
 
                     <div>
                         <button className={upvoted === true ? "upvoted": "vote-button"} onClick={handleUpvoteClick}>
-                          <FontAwesomeIcon icon={faThumbsUp} />
+                        {selected.thumbsUp} <FontAwesomeIcon icon={faThumbsUp} />
                         </button>
                         <button className={downvoted === true ? "downvoted": "vote-button"} onClick={handleDownvoteClick}>
-                          <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
+                        {selected.thumbsDown} <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
                         </button>
                       </div>
                 </div>

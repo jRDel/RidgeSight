@@ -125,10 +125,10 @@ function SightingMap() {
     castVote();
   }
 
-//   function renderProfile(value){
-//     let nameArray = value.split(" ");
-//     nav('/otherprofile', {state: {firstname: nameArray[0], lastname: nameArray[1]}});
-// }
+  function renderOtherProfile(value){
+    let nameArray = value.split(" ");
+    nav('/otherprofile', {state: {firstname: nameArray[0], lastname: nameArray[1]}});
+}
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}>
@@ -158,10 +158,10 @@ function SightingMap() {
                     <p>{selected.description}</p>
                     <img src={selected.photo} width="100px" height="100px" alt={selected.sightedName[0]}></img>
                     <div className="mt-3">
-                        Seen here: <a href={`/profile/${selected.sightedId}`}>{selected.sightedName[0]}</a>
+                        Seen here: <a class="link" onClick={() => renderOtherProfile(selected.sightedName[0])}>{selected.sightedName[0]}</a>
                     </div>
                     <div className="mt-2 mb-3">
-                      Seen by: <a href={`/profile/${selected.sighterId}`}>{selected.sighterName}</a>
+                      Seen by: <a class="link" onClick={() => renderOtherProfile(selected.sighterName)}>{selected.sighterName}</a>
                     </div>
 
                     <div>

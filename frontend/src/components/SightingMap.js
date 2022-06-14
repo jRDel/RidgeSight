@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import "./SightingMap.css";
 import { onError } from '../lib/errorLib';
-import { API } from 'aws-amplify';
+import { API, Auth } from 'aws-amplify';
 import { useAppContext } from "../lib/contextLib";
 
 function SightingMap() {
@@ -84,6 +84,41 @@ function SightingMap() {
   }
 
 
+   async function castVote() {
+      console.log('booo', selected,  (await Auth.currentAuthenticatedUser()))
+      let result = await API.post("ridgesight", "/vote", {
+        body: {
+          sightingId: selected.id,
+          userId: (await Auth.currentAuthenticatedUser()).attributes.sub,
+          vote: upvoted ? 1: downvoted ? -1: 0
+        },
+      });
+      console.log('result is ', result)
+    }
+
+
+  async function handleUpvoteClick() {
+    if(upvoted === true) {
+      setUpvoted(false);
+    } else if (upvoted === false) {
+      setUpvoted(true);
+      setDownvoted(false);
+    }
+
+    castVote();
+  }
+
+  async function handleDownvoteClick() {
+    if(downvoted === true) {
+      setDownvoted(false);
+    } else if (downvoted === false) {
+      setDownvoted(true);
+      setUpvoted(false);
+    }
+
+    castVote();
+  }
+
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}>
       <GoogleMap
@@ -118,50 +153,14 @@ function SightingMap() {
                       Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighter}</a>
                     </div>
 
-                    {!upvoted && !downvoted && 
-                      <div>
-                        <button className="vote-button" onClick={() => {
-                          setUpvoted(true);
-                          console.log("upvoted");
-                        }}>
+                    <div>
+                        <button className={upvoted === true ? "upvoted": "vote-button"} onClick={handleUpvoteClick}>
                           <FontAwesomeIcon icon={faThumbsUp} />
                         </button>
-                        <button className="vote-button" onClick={() => {
-                          setDownvoted(true);
-                          console.log("downvoted");
-                          }}>
+                        <button className={downvoted === true ? "downvoted": "vote-button"} onClick={handleDownvoteClick}>
                           <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
                         </button>
                       </div>
-                    }
-
-                    { upvoted && 
-                      <div>
-                        <button className="upvoted" onClick={() => setUpvoted(false)}>
-                          <FontAwesomeIcon icon={faThumbsUp} />
-                        </button>
-                        <button className="vote-button" onClick={() => {
-                            setDownvoted(true);
-                            setUpvoted(false);
-                            console.log("downvoted");
-                          }}>
-                            <FontAwesomeIcon className="mx-3" icon={faThumbsDown} />
-                        </button>
-                      </div>
-                    }
-
-                    { downvoted && 
-                      <div>
-                        <button className="vote-button" onClick={() => {
-                            setUpvoted(true);
-                            setDownvoted(false);
-                            console.log("upvoted");
-                          }}>
-                            <FontAwesomeIcon icon={faThumbsUp} />
-                        </button>
-                        <button className="downvoted" onClick={() => setDownvoted(false)}><FontAwesomeIcon className="mx-3" icon={faThumbsDown} /></button>
-                      </div>
-                    }
                 </div>
           </InfoWindowF>
           )

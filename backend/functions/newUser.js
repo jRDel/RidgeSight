@@ -10,9 +10,9 @@ export const main = async (event, context) => {
             "lastname":  event.request.userAttributes.family_name,
             "email": event.request.userAttributes.email,
             "pictureArn": null,
-            "awards": null,
-            "thumbsUp": null,
-            "thumbsDown": null
+            "awards": [],
+            // "thumbsUp": dynamoDb.client.createSet([]),
+            // "thumbsDown": dynamoDb.client.createSet([])
         }
 
         let dbUserItemParams = {

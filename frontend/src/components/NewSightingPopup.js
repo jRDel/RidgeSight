@@ -26,6 +26,8 @@ function NewSightingPopup() {
   const [sightedId, setSightedId] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  let sightedData = [];
+
   function renderChoosePage(){
     nav("/sighting/new");
   }
@@ -82,8 +84,8 @@ function NewSightingPopup() {
         latitude, 
         longitude, 
         sighterId, 
-        sightedName, 
-        sightedId, 
+        sightedName: sightedName[0], 
+        sightedId: sightedId[0], 
         sighterName
       }
   
@@ -169,20 +171,21 @@ const onMarkerDragEnd = (e) => {
                 <Form.Group controlId="sightedName">
                   <Form.Label>Who is it?</Form.Label>
                   <Form.Select
-                  value={sightedName}
+                  value={sightedData[1]}
                   onChange={(e) => {
-                    console.log(e.target.value)
-                    setSightedName([e.target.value.name]);
-                    setSightedId([e.target.value.id]);
+                    sightedData = e.target.value.split(",");
+                    setSightedName([sightedData[1]]);
+                    setSightedId([sightedData[0]]);
                   }}
                   >
                    <option>Select a user</option>   
                       { users && 
                         users.map((user, index) => {
-                          return (<option key={index} value={{
-                            id: user.id,
-                            name: user.firstname + " " + user.lastname
-                            }}>
+                          const test = [
+                            user.id,
+                            user.firstname + " " + user.lastname
+                          ]
+                          return (<option key={index} value={test}>
                               {user.firstname} {user.lastname}
                               </option>)
                         })

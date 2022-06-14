@@ -9,6 +9,7 @@ import NewSighting from "./pages/NewSighting";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import Users from "./pages/Users";
+import OtherProfile from "./pages/OtherProfile";
 
 
 export default function Links() {
@@ -67,6 +68,14 @@ export default function Links() {
         element={
             <AuthenticatedRoute>
             <Users />
+            </AuthenticatedRoute>
+        }
+      />
+      <Route
+        path="/otherprofile"
+        element={
+            <AuthenticatedRoute>
+            <OtherProfile />
             </AuthenticatedRoute>
         }
       />

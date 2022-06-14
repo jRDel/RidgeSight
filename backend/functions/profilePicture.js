@@ -2,6 +2,9 @@ import handler from "../util/handler";
 import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
+    if (!event.queryStringParameters){
+        throw new Error("userId parameter required")
+    }
     const data = JSON.parse(event.body);
     if ("userId" in event.queryStringParameters){
         var profileParams = {
@@ -29,7 +32,5 @@ export const main = handler(async (event) => {
         await dynamoDb.update(profileParams);
         await dynamoDb.update(userParams);
         return profileParams.Item, userParams.Item;
-    } else {
-        throw new Error("userId parameter required")
     }
 });

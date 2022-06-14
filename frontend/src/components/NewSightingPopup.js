@@ -24,13 +24,12 @@ function NewSightingPopup() {
   const [longitude, setLongitude] = useState(-119.9527);
   const [sightedName, setSightedName] = useState([]);
   const [sightedId, setSightedId] = useState([]);
-  const [sighterName, setSighterName] = useState("");
-  const [sighterId, setSighterId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   function renderChoosePage(){
     nav("/sighting/new");
   }
+
   function validateForm(){
     return title.length > 0 &&
     description.length > 0 &&
@@ -45,8 +44,8 @@ function NewSightingPopup() {
     event.preventDefault();
 
     const { attributes } = await Auth.currentAuthenticatedUser();
-    setSighterId(attributes.sub);
-    setSighterName(attributes.given_name + " " + attributes.family_name);
+    let sighterId = attributes.sub;
+    let sighterName = attributes.given_name + " " + attributes.family_name;
   
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
@@ -64,10 +63,10 @@ function NewSightingPopup() {
 
       // let sighting = {
       //   title: "Jake Sighted at Bowling Alley!",
-      //   description: "stuff",
-      //   pictureArn: "stuff",
-      //   latitude: 39.247229,
-      //   longitude: -119.948557,
+      //   description: "Saw Jake last night",
+      //   pictureArn: "https://global-uploads.webflow.com/6126ab68c73f925bdc355c97/61b2cd92e6d4720544484d31_ridgeline-icon.svg",
+      //   latitude: 39.246664,
+      //   longitude: -119.948911,
       //   sighterId: 0,
       //   sightedId: [1,2],
       //   sightedName: ["Jake"],
@@ -76,8 +75,19 @@ function NewSightingPopup() {
       //   //thumbsDown: 1,
       //   //createdAt: "2022-06-09",
       // }
+
+      let sighting = {
+        title, 
+        description, 
+        latitude, 
+        longitude, 
+        sighterId, 
+        sightedName, 
+        sightedId, 
+        sighterName
+      }
   
-      await createSighting({ title, description, pictureArn, longitude, latitude, sighterId, sightedId, sighterName, sightedName });
+      await createSighting({...sighting, pictureArn});
       //await createSighting(sighting);
       nav("/");
     } catch (e) {
@@ -92,9 +102,19 @@ function NewSightingPopup() {
     });
   }
 
-  function getUsers() {
-    //Here should get users from API endpoint
-  }
+  const [users, setUsers] = useState([]);
+    
+    useEffect(() => {
+        async function onLoad(){
+            const userList = await loadUsers();
+            setUsers(userList);
+        }
+        onLoad();
+    }, [])
+
+    async function loadUsers(){
+        return API.get("ridgesight", "/profile");
+    }
 
 //MAP
   const [currentPosition, setCurrentPosition] = useState({
@@ -150,11 +170,23 @@ const onMarkerDragEnd = (e) => {
                   <Form.Label>Who is it?</Form.Label>
                   <Form.Select
                   value={sightedName}
-                  onChange={(e) => setSightedName(e.target.value)}
+                  onChange={(e) => {
+                    console.log(e.target.value)
+                    setSightedName([e.target.value.name]);
+                    setSightedId([e.target.value.id]);
+                  }}
                   >
-                    <option>Choose a Ridgeliner!</option>
-                    <option>User 1</option>
-                    <option>User 2</option>
+                   <option>Select a user</option>   
+                      { users && 
+                        users.map((user, index) => {
+                          return (<option key={index} value={{
+                            id: user.id,
+                            name: user.firstname + " " + user.lastname
+                            }}>
+                              {user.firstname} {user.lastname}
+                              </option>)
+                        })
+                      }
                   </Form.Select>
                 </Form.Group>
                 <Form.Group controlId="file">

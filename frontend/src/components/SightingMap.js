@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import "./SightingMap.css";
 import { onError } from '../lib/errorLib';
-import { API } from 'aws-amplify';
+import { API, Storage } from 'aws-amplify';
 import { useAppContext } from "../lib/contextLib";
 
 function SightingMap() {
@@ -15,8 +15,13 @@ function SightingMap() {
   const [sightings, setSightings] = useState([]);
   const { isAuthenticated } = useAppContext();
 
-  const onSelect = (item) => {
+  const onSelect = async (item) => {
+    if (item.pictureArn) {
+      item.photo = await Storage.vault.get(item.pictureArn);
+    }
+
     setSelected(item);
+    console.log(item.photo)
   }
   
   const mapStyle = {        
@@ -95,7 +100,7 @@ function SightingMap() {
       >
         { sightings &&
           sightings.map(item => {
-            return (<MarkerF key={item.title} position={{lat: item.latitude, lng: item.longitude}} onClick={() => onSelect(item)}/>)
+            return (<MarkerF key={item.id} position={{lat: item.latitude, lng: item.longitude}} onClick={() => onSelect(item)}/>)
           })
         }
           
@@ -110,12 +115,12 @@ function SightingMap() {
                 <div>
                     <h5>{selected.title}</h5>
                     <p>{selected.description}</p>
-                    <img src={selected.pictureArn} width="100px" height="100px" alt={selected.sightee}></img>
+                    <img src={selected.photo} width="100px" height="100px" alt={selected.sightedName[0]}></img>
                     <div className="mt-3">
-                        Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightee}</a>
+                        Seen here: <a href={`/users/${selected.sightee}`}>{selected.sightedName[0]}</a>
                     </div>
                     <div className="mt-2 mb-3">
-                      Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighter}</a>
+                      Seen by: <a href={`/users/${selected.sighter}`}>{selected.sighterName}</a>
                     </div>
 
                     {!upvoted && !downvoted && 

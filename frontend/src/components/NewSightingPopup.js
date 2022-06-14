@@ -79,7 +79,6 @@ function NewSightingPopup() {
       let sighting = {
         title, 
         description, 
-        pictureArn, 
         latitude, 
         longitude, 
         sighterId, 
@@ -88,7 +87,7 @@ function NewSightingPopup() {
         sighterName
       }
   
-      await createSighting({...sighting});
+      await createSighting({...sighting, pictureArn});
       //await createSighting(sighting);
       nav("/");
     } catch (e) {
@@ -172,6 +171,7 @@ const onMarkerDragEnd = (e) => {
                   <Form.Select
                   value={sightedName}
                   onChange={(e) => {
+                    console.log(e.target.value)
                     setSightedName([e.target.value.name]);
                     setSightedId([e.target.value.id]);
                   }}

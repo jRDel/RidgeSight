@@ -5,6 +5,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import ProfileId from "./pages/Profile";
 import NewSighting from "./pages/NewSighting";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
@@ -60,6 +61,14 @@ export default function Links() {
         element={
             <AuthenticatedRoute>
             <Profile />
+            </AuthenticatedRoute>
+        }
+      />
+      <Route
+        path="/profile/:id"
+        element={
+            <AuthenticatedRoute>
+            <ProfileId />
             </AuthenticatedRoute>
         }
       />

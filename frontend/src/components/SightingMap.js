@@ -158,10 +158,10 @@ function SightingMap() {
                     <p>{selected.description}</p>
                     <img src={selected.photo} width="100px" height="100px" alt={selected.sightedName[0]}></img>
                     <div className="mt-3">
-                        Seen here: <a href="/">{selected.sightedName[0]}</a>
+                        Seen here: <a href={`/profile/${selected.sightedId}`}>{selected.sightedName[0]}</a>
                     </div>
                     <div className="mt-2 mb-3">
-                      Seen by: <a href="/">{selected.sighterName}</a>
+                      Seen by: <a href={`/profile/${selected.sighterId}`}>{selected.sighterName}</a>
                     </div>
 
                     <div>

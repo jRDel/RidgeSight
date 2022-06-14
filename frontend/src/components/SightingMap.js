@@ -65,13 +65,12 @@ function SightingMap() {
   //   }
   // ]
 
+
   useEffect(() => {
     async function onLoad(){
       try{
         const sightingsArray = await loadSightings();
-        console.log(sightingsArray);
         setSightings(sightingsArray);
-        console.log(sightings);
       } catch(e){
         onError(e);
       }
@@ -92,18 +91,19 @@ function SightingMap() {
         zoom={15}
         center={mapCenter}
         mapTypeId='satellite'
+        key={sightings.length}
       >
         { sightings &&
           sightings.map(item => {
-            return (<MarkerF key={item.title} position={item.location} onClick={() => onSelect(item)}/>)
+            return (<MarkerF key={item.title} position={{lat: item.latitude, lng: item.longitude}} onClick={() => onSelect(item)}/>)
           })
         }
           
         {
-          selected.location && 
+          selected.latitude && 
           (
             <InfoWindowF
-              position={selected.location}
+              position={{lat: selected.latitude, lng: selected.longitude}}
               clickable={true}
               onCloseClick={() => setSelected({})}
             >
